@@ -8,13 +8,12 @@ class router
     public function routes()
     {
 
-        $controller = (isset($_GET["controller"]) ? ucfirst(array_shift($_GET)) : "home");
+        $controller = (isset($_GET["controller"]) ? ucfirst(array_shift($_GET)) : "auth");
         $controller = "\\App\\controller\\" . $controller . "controller";
         
-        $action = (isset($_GET["action"]) ? array_shift($_GET) : "index");
+        $action = (isset($_GET["action"]) ? array_shift($_GET) : "register");
 
 
-        // Vérification de l'existence de la classe
         if (class_exists($controller)) {
             
             $controller = new $controller();

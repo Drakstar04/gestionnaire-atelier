@@ -18,8 +18,24 @@ abstract class Controller
         include dirname(__DIR__) . "/views/base.php";
     }
 
-    
+    // Vérifie si l'utilisateur est connectée
+    protected function isLogged()
+    {
+        if (!isset($_SESSION["user"])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit;
+        }
+    }
+
+    // Vérifie si l'utilisateur est ADMIN
+    protected function isAdmin()
+    {
+        $this->isLogged();
+
+        if ($_SESSION["user"]["id_role"] != 1) {
+            header("Location: index.php?controller=...&action=...");
+            exit;
+        }
+    }
 }
-
-
 ?>

@@ -21,6 +21,27 @@ class UserModel extends DbConnect {
         $this->request->execute();
         return $this->request->fetch();
     }
+
+    public function findByEmail(string $email) 
+    {
+        $this->request = $this->connection->prepare("SELECT * FROM users WHERE email_users = :email");
+        $this->request->bindParam(":email", $email);
+        $this->request->execute();
+        return $this->request->fetch();
+    }
+
+    public function create(User $user)
+    {
+        $this->request = $this->connection->prepare(
+            "INSERT INTO users (name_users, email_users, password_users, id_roles) 
+             VALUES (:name, :email, :password, :role)"
+        );
+        $this->request->bindValue(":name", $user->getName_users());
+        $this->request->bindValue(":email", $user->getEmail_users());
+        $this->request->bindValue(":password", $user->getPassword_users());
+        $this->request->bindValue(":role", $user->getId_roles());
+        $this->executeTryCatch();
+    }
     
     private function executeTryCatch()
     {

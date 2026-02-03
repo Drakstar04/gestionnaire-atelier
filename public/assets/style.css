@@ -1,0 +1,39 @@
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.description-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 4.5em;
+}
+
+.description-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+
+.table-col-id {
+    width: 10%;
+}
+
+.table-col-actions {
+    width: 20%;
+}
+
+.table-empty-state {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    color: #6c757d;
+    font-style: italic;
+}

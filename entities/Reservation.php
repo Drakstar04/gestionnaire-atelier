@@ -49,3 +49,4 @@ class Reservation {
         return $this;
     }
 }
+?>

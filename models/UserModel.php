@@ -53,3 +53,4 @@ class UserModel extends DbConnect {
         $this->request->closeCursor();
     }
 }
+?>

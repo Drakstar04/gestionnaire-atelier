@@ -42,7 +42,7 @@ class AuthController extends Controller
                             "id_role" => $newUser->id_roles
                         ];
 
-                        header("Location: index.php?controller=...&action=...");
+                        header("Location: index.php?controller=workshop&action=workshopList");
                         exit;
                     }
                 }
@@ -78,7 +78,7 @@ class AuthController extends Controller
                         "id_role" => $user->id_roles
                     ];
 
-                    header("Location: index.php?controller=...&action=...");
+                    header("Location: index.php?controller=workshop&action=workshopList");
                     exit;
 
                 } else {

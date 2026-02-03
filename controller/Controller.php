@@ -33,7 +33,7 @@ abstract class Controller
         $this->isLogged();
 
         if ($_SESSION["user"]["id_role"] != 1) {
-            header("Location: index.php?controller=...&action=...");
+            header("Location: index.php?controller=workshop&action=workshopList");
             exit;
         }
     }

@@ -27,3 +27,4 @@ class Category {
         return $this;
     }
 }
+?>

@@ -32,3 +32,4 @@ class CategoryModel extends DbConnect {
         $this->request->closeCursor();
     }
 }
+?>

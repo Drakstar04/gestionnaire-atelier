@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/style.css" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
             <div class="container">
-                <a class="navbar-brand" href="index.php?controller=home&action=index">AtelierApp</a>
+                <a class="navbar-brand" href="index.php?controller=workshop&action=workshopList">AtelierApp</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -19,7 +22,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?controller=home&action=index">Liste des ateliers</a>
+                            <a class="nav-link" href="index.php?controller=workshop&action=workshopList">Liste des ateliers</a>
                         </li>
                     </ul>
 
@@ -29,8 +32,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Administration</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="index.php?controller=admin&action=workshops">Gérer les ateliers</a></li>
-                                    <li><a class="dropdown-item" href="index.php?controller=admin&action=categories">Gérer les catégories</a></li>
+                                    <li><a class="dropdown-item" href="index.php?controller=admin&action=allCategories">Gérer les catégories</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="index.php?controller=admin&action=reservations">Toutes les réservations</a></li>
                                 </ul>
@@ -38,7 +40,7 @@
                         <?php } ?>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?controller=user&action=reservations">Mes réservations</a>
+                            <a class="nav-link" href="index.php?controller=reservation&action=reservationList">Mes réservations</a>
                         </li>
                         <li class="nav-item d-flex align-items-center">
                             <div class="text-white mx-2">Bonjour, <?= htmlspecialchars($_SESSION["user"]["name_user"]) ?></div>
@@ -61,7 +63,7 @@
             </nav>
     </header>
 
-    <main class="container min-vh-100 py-4">
+    <main class="container py-4 mb-5">
         <?= $content ?>
     </main>
 
@@ -79,7 +81,7 @@
                     <h5 class="text-uppercase fw-bold">Navigation</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2">
-                            <a href="index.php?controller=home&action=index" class="text-decoration-none text-light hover-primary">
+                            <a href="index.php?controller=workshop&action=workshopList" class="text-decoration-none text-light hover-primary">
                                 Liste des ateliers
                             </a>
                         </li>

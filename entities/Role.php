@@ -27,3 +27,4 @@ class Role {
         return $this;
     }
 }
+?>

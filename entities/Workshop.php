@@ -71,3 +71,4 @@ class Workshop {
         return $this;
     }
 }
+?>

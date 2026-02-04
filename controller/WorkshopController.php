@@ -14,10 +14,16 @@ class WorkshopController extends Controller
     {
         $workshopModel = new WorkshopModel();
         $categoryModel = new CategoryModel();
+        $currentCategory = null;
+        $searchQuery = null;
 
         $categories = $categoryModel->findAll();
 
-        if (isset($_GET["category"]) && !empty($_GET["category"])) {
+        if (isset($_GET["search"]) && !empty($_GET["search"])) {
+            $searchQuery = htmlspecialchars($_GET["search"]);
+            $workshops = $workshopModel->searchWorkshop($searchQuery);
+
+        } elseif (isset($_GET["category"]) && !empty($_GET["category"])) {
             $idCategory = (int)$_GET["category"];
             $workshops = $workshopModel->findByCategory($idCategory);
             $currentCategory = $idCategory;
@@ -29,7 +35,8 @@ class WorkshopController extends Controller
         $this->render("workshop/workshopList", [
             "workshops" => $workshops,
             "categories" => $categories,
-            "currentCategory" => $currentCategory
+            "currentCategory" => $currentCategory,
+            "searchQuery" => $searchQuery
         ]);
     }
 

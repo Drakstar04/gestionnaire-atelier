@@ -11,6 +11,30 @@
                 </a>
             </div>
         <?php } ?>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <form action="index.php" method="GET" class="d-flex">
+                    <input type="hidden" name="controller" value="workshop">
+                    <input type="hidden" name="action" value="workshopList">
+                    
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Rechercher un atelier" 
+                           value="<?= isset($searchQuery) ? $searchQuery : '' ?>">
+                    
+                    <button type="submit" class="btn btn-dark">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                    
+                    <?php if(isset($searchQuery) && !empty($searchQuery)){ ?>
+                        <a href="index.php?controller=workshop&action=workshopList" class="btn btn-outline-secondary ms-2" title="Effacer">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    <?php } ?>
+                </form>
+            </div>
+        </div>
+
         <div class="mt-4">
             <a href="index.php?controller=workshop&action=workshopList" 
                class="btn <?= ($currentCategory === null) ? 'btn-dark' : 'btn-outline-dark' ?> me-2 mb-2">

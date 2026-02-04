@@ -126,6 +126,21 @@ class WorkshopModel extends DbConnect {
         $this->request->bindValue(":id", $id);
         $this->executeTryCatch();
     }
+
+    public function searchWorkshop(string $query)
+    {
+        $this->request = $this->connection->prepare(
+            "SELECT w.*, c.name_categories 
+            FROM workshops w 
+            INNER JOIN categories c ON w.id_categories = c.id_categories
+            WHERE w.title_workshops LIKE :query
+            ORDER BY w.date_workshops ASC"
+        );
+
+        $this->request->bindValue(":query", "%" . $query . "%");
+        $this->request->execute();
+        return $this->request->fetchAll();
+    }
     
     private function executeTryCatch()
     {

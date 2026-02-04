@@ -4,6 +4,7 @@ namespace App\controller;
 
 use App\models\WorkshopModel;
 use App\models\CategoryModel;
+use App\entities\Workshop;
 
 class WorkshopController extends Controller
 {
@@ -50,6 +51,91 @@ class WorkshopController extends Controller
             header("Location: index.php?controller=workshop&action=workshopList");
             exit;
         }
+    }
+
+    // Création d'un atelier
+    public function add()
+    {
+        $this->isAdmin();
+        
+        if (isset($_POST) && !empty($_POST)) {
+            if(!empty($_POST["title"]) && !empty($_POST["description"]) && !empty($_POST["date"]) && !empty($_POST["availability"]) && !empty($_POST["category"])){
+                $workshop = new Workshop();
+
+                $workshop->setTitle_workshops(htmlspecialchars($_POST["title"]));
+                $workshop->setDescription_workshops(htmlspecialchars($_POST["description"]));
+                $workshop->setDate_workshops($_POST["date"]);
+                $workshop->setAvailability_workshops((int)$_POST["availability"]);
+                $workshop->setId_categories((int)$_POST["category"]);
+
+                $workshopModel = new WorkshopModel();
+                $workshopModel->create($workshop);
+
+                header("Location: index.php?controller=workshop&action=workshopList");
+                exit;
+            }
+        }
+
+        $categoryModel = new CategoryModel();
+        $categories = $categoryModel->findAll();
+
+        $this->render("workshop/add", ["categories" => $categories]);
+    }
+
+    // Modification d'un atelier
+    public function edit()
+    {
+        $this->isAdmin();
+
+        if (!isset($_GET["id"]) || empty($_GET["id"])) {
+            header("Location: index.php?controller=workshop&action=workshopList");
+            exit;
+        }
+
+        $id = (int)$_GET["id"];
+        $workshopModel = new WorkshopModel();
+
+        if (isset($_POST) && !empty($_POST)) {
+            if(!empty($_POST["title"]) && !empty($_POST["description"]) && !empty($_POST["date"]) && !empty($_POST["availability"]) && !empty($_POST["category"])){
+
+                $workshop = new Workshop();
+
+                $workshop->setTitle_workshops(htmlspecialchars($_POST["title"]));
+                $workshop->setDescription_workshops(htmlspecialchars($_POST["description"]));
+                $workshop->setDate_workshops($_POST["date"]);
+                $workshop->setAvailability_workshops((int)$_POST["availability"]);
+                $workshop->setId_categories((int)$_POST["category"]);
+
+                $workshopModel->update($id, $workshop);
+
+                header("Location: index.php?controller=workshop&action=workshopList");
+                exit;
+            }
+        }
+
+        $workshop = $workshopModel->find($id);
+        
+        $categoryModel = new CategoryModel();
+        $categories = $categoryModel->findAll();
+
+        $this->render("workshop/edit", [
+            "workshop" => $workshop,
+            "categories" => $categories
+        ]);
+    }
+
+    // Suppresion d'un atelier
+    public function delete()
+    {
+        $this->isAdmin();
+
+        if (isset($_GET["id"]) && !empty($_GET["id"])) {
+            $workshopModel = new WorkshopModel();
+            $workshopModel->delete((int)$_GET["id"]);
+        }
+        
+        header("Location: index.php?controller=workshop&action=workshopList");
+        exit;
     }
 }
 ?>

@@ -4,6 +4,13 @@
     <div class="col-12 text-center">
         <h1 class="display-4 fw-bold">Nos Prochains Ateliers</h1>
         <p class="lead text-muted">Découvrez et réservez votre prochaine expérience créative.</p>
+        <?php if (isset($_SESSION["user"]["id_role"]) && $_SESSION["user"]["id_role"] == 1){ ?>
+            <div class="mb-3">
+                <a href="index.php?controller=workshop&action=add" class="btn btn-success">
+                    <i class="fa-solid fa-plus-circle me-2"></i> Ajouter un atelier
+                </a>
+            </div>
+        <?php } ?>
         <div class="mt-4">
             <a href="index.php?controller=workshop&action=workshopList" 
                class="btn <?= ($currentCategory === null) ? 'btn-dark' : 'btn-outline-dark' ?> me-2 mb-2">
@@ -34,9 +41,25 @@
                 <div class="card h-100 shadow-sm border-0 hover-card">
                     
                     <div class="card-header bg-transparent border-0 pt-3">
-                        <span class="badge bg-primary">
-                            <i class="fa-solid fa-tag me-1"></i> <?= htmlspecialchars($workshop->name_categories) ?>
-                        </span>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="badge bg-primary">
+                                <i class="fa-solid fa-tag me-1"></i> <?= htmlspecialchars($workshop->name_categories) ?>
+                            </span>
+
+                            <?php if (isset($_SESSION["user"]["id_role"]) && $_SESSION["user"]["id_role"] == 1){ ?>
+                                <div>
+                                    <a href="index.php?controller=workshop&action=edit&id=<?= $workshop->id_workshops ?>" 
+                                    class="btn btn-sm btn-outline-secondary me-2">
+                                        <i class="fa-solid fa-pen me-1"></i> Modifier
+                                    </a>
+                                    <a href="index.php?controller=workshop&action=delete&id=<?= $workshop->id_workshops ?>" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Confirmer la suppression ?')">
+                                        <i class="fa-solid fa-trash me-1"></i> Supprimer
+                                    </a>
+                                </div>
+                            <?php } ?>
+                        </div>  
                     </div>
                     
                     <div class="card-body">

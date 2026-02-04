@@ -3,18 +3,34 @@
 <div class="row justify-content-center">
     <div class="col-lg-8">
         
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="index.php?controller=workshop&action=workshopList" class="text-decoration-none">
-                        <i class="fa-solid fa-arrow-left me-1"></i> Ateliers
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="index.php?controller=workshop&action=workshopList" class="text-decoration-none">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Ateliers
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <?= htmlspecialchars($workshop->title_workshops) ?>
+                    </li>
+                </ol>
+            </nav>
+
+            <?php if (isset($_SESSION["user"]["id_role"]) && $_SESSION["user"]["id_role"] == 1){ ?>
+                <div>
+                    <a href="index.php?controller=workshop&action=edit&id=<?= $workshop->id_workshops ?>" 
+                    class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="fa-solid fa-pen me-1"></i> Modifier
                     </a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <?= htmlspecialchars($workshop->title_workshops) ?>
-                </li>
-            </ol>
-        </nav>
+                    <a href="index.php?controller=workshop&action=delete&id=<?= $workshop->id_workshops ?>" 
+                    class="btn btn-sm btn-outline-danger"
+                    onclick="return confirm('Confirmer la suppression ?')">
+                        <i class="fa-solid fa-trash me-1"></i> Supprimer
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
 
         <div class="card shadow border-0">
             <div class="card-body p-5">

@@ -53,6 +53,54 @@ class WorkshopModel extends DbConnect {
         $this->request->execute();
         return $this->request->fetchAll();
     }
+
+    // Suppression d'un atelier
+    public function delete(int $id)
+    {
+        $this->request = $this->connection->prepare("DELETE FROM workshops WHERE id_workshops = :id");
+        $this->request->bindValue(":id", $id);
+        $this->executeTryCatch();
+    }
+
+    // Création d'un atelier
+    public function create(Workshop $workshop)
+    {
+        $this->request = $this->connection->prepare(
+            "INSERT INTO workshops (title_workshops, description_workshops, date_workshops, availability_workshops, id_categories) 
+             VALUES (:title, :description, :date, :availability, :category)"
+        );
+
+        $this->request->bindValue(":title", $workshop->getTitle_workshops());
+        $this->request->bindValue(":description", $workshop->getDescription_workshops());
+        $this->request->bindValue(":date", $workshop->getDate_workshops());
+        $this->request->bindValue(":availability", $workshop->getAvailability_workshops());
+        $this->request->bindValue(":category", $workshop->getId_categories());
+
+        $this->executeTryCatch();
+    }
+
+    // Modification d'un atelier
+    public function update(int $id, Workshop $workshop)
+    {
+        $this->request = $this->connection->prepare(
+            "UPDATE workshops 
+             SET title_workshops = :title, 
+                 description_workshops = :description, 
+                 date_workshops = :date, 
+                 availability_workshops = :availability, 
+                 id_categories = :category
+             WHERE id_workshops = :id"
+        );
+
+        $this->request->bindValue(":id", $id);
+        $this->request->bindValue(":title", $workshop->getTitle_workshops());
+        $this->request->bindValue(":description", $workshop->getDescription_workshops());
+        $this->request->bindValue(":date", $workshop->getDate_workshops());
+        $this->request->bindValue(":availability", $workshop->getAvailability_workshops());
+        $this->request->bindValue(":category", $workshop->getId_categories());
+
+        $this->executeTryCatch();
+    }
     
     private function executeTryCatch()
     {
@@ -63,5 +111,5 @@ class WorkshopModel extends DbConnect {
         }
         $this->request->closeCursor();
     }
-}
+}   
 ?>

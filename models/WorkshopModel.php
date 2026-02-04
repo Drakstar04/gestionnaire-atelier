@@ -101,6 +101,31 @@ class WorkshopModel extends DbConnect {
 
         $this->executeTryCatch();
     }
+
+    // Récupère uniquement les ateliers à venir avec des places dispo
+    public function findUpcomingAvailable()
+    {
+        $this->request = "SELECT * FROM workshops 
+                          WHERE date_workshops >= CURDATE() 
+                          AND availability_workshops > 0
+                          ORDER BY date_workshops ASC";
+        $result = $this->connection->query($this->request);
+        return $result->fetchAll();
+    }
+
+    // Mise à jour de la disponibilité (+1 ou -1)
+    public function updateAvailability(int $id, string $operation)
+    {
+        $operator = ($operation === "decrement") ? "-" : "+";
+        
+        $this->request = $this->connection->prepare(
+            "UPDATE workshops 
+             SET availability_workshops = availability_workshops $operator 1 
+             WHERE id_workshops = :id"
+        );
+        $this->request->bindValue(":id", $id);
+        $this->executeTryCatch();
+    }
     
     private function executeTryCatch()
     {

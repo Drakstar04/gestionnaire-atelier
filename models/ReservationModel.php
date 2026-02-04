@@ -49,10 +49,43 @@ class ReservationModel extends DbConnect {
                         FROM reservations r
                         INNER JOIN users u ON r.id_users = u.id_users
                         INNER JOIN workshops w ON r.id_workshops = w.id_workshops
-                        ORDER BY r.date_reservations DESC";
+                        ORDER BY w.date_workshops DESC";
         
         $result = $this->connection->query($this->request);
         return $result->fetchAll();
+    }
+
+    // Créer une réservation
+    public function create(Reservation $reservation)
+    {
+        $this->request = $this->connection->prepare(
+            "INSERT INTO reservations (date_reservations, id_users, id_workshops) 
+             VALUES (NOW(), :id_user, :id_workshop)"
+        );
+        $this->request->bindValue(":id_user", $reservation->getId_users());
+        $this->request->bindValue(":id_workshop", $reservation->getId_workshops());
+        $this->executeTryCatch();
+    }
+
+    // Annuler une réservation
+    public function delete(int $id)
+    {
+        $this->request = $this->connection->prepare("DELETE FROM reservations WHERE id_reservations = :id");
+        $this->request->bindValue(":id", $id);
+        $this->executeTryCatch();
+    }
+
+    // Vérifier si l'utilisateur a déjà réservé cet atelier
+    public function checkDuplicate(int $userId, int $workshopId)
+    {
+        $this->request = $this->connection->prepare(
+            "SELECT COUNT(*) as count FROM reservations WHERE id_users = :user AND id_workshops = :workshop"
+        );
+        $this->request->bindValue(":user", $userId);
+        $this->request->bindValue(":workshop", $workshopId);
+        $this->request->execute();
+        $result = $this->request->fetch();
+        return $result->count > 0;
     }
 
     private function executeTryCatch()

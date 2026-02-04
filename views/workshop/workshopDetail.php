@@ -71,9 +71,22 @@
                     </p>
                 </div>
                 <div class="d-grid gap-2">
+                    <?php 
+                        $now = new DateTime();
+                        $workshopDate = new DateTime($workshop->date_workshops);
+                        $isPast = $workshopDate < $now;
+                    ?>
                     <?php if(isset($_SESSION["user"])) { ?>
-                        <?php if($workshop->availability_workshops > 0) { ?>
-                            <a href="index.php?controller=reservation&action=reservationCreate" class="btn btn-primary btn-lg py-3">
+                        <?php if($isAlreadyReserved) { ?>
+                            <button class="btn btn-success btn-lg py-3" disabled>
+                                <i class="fa-solid fa-check-circle me-2"></i> Vous êtes déjà inscrit
+                            </button>
+                        <?php } elseif ($isPast) { ?>
+                            <button class="btn btn-secondary btn-lg py-3" disabled>
+                                <i class="fa-solid fa-hourglass-end me-2"></i> Atelier terminé
+                            </button>
+                        <?php } elseif ($workshop->availability_workshops > 0) { ?>
+                            <a href="index.php?controller=reservation&action=reservationCreate&id=<?= $workshop->id_workshops ?>" class="btn btn-primary btn-lg py-3">
                                 <i class="fa-solid fa-ticket me-2"></i> Réserver ma place
                             </a>
                         <?php } else { ?>

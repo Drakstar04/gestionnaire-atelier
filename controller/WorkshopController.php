@@ -4,6 +4,7 @@ namespace App\controller;
 
 use App\models\WorkshopModel;
 use App\models\CategoryModel;
+use App\models\ReservationModel;
 use App\entities\Workshop;
 
 class WorkshopController extends Controller
@@ -42,10 +43,20 @@ class WorkshopController extends Controller
             $workshop = $workshopModel->find($id);
 
             if ($workshop) {
-                $this->render("workshop/workshopDetail", ["workshop" => $workshop]);
-            } else {
-                header("Location: index.php?controller=workshop&action=workshopList");
-                exit;
+                $isAlreadyReserved = false;
+                
+                if (isset($_SESSION["user"])) {
+                    $reservationModel = new ReservationModel();
+                    $isAlreadyReserved = $reservationModel->checkDuplicate(
+                        $_SESSION["user"]["id_user"], 
+                        $workshop->id_workshops
+                    );
+                }
+
+                $this->render("workshop/workshopDetail", [
+                    "workshop" => $workshop,
+                    "isAlreadyReserved" => $isAlreadyReserved
+                ]);
             }
         } else {
             header("Location: index.php?controller=workshop&action=workshopList");

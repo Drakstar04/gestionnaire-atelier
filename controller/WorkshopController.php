@@ -75,29 +75,59 @@ class WorkshopController extends Controller
     public function add()
     {
         $this->isAdmin();
-        
-        if (isset($_POST) && !empty($_POST)) {
-            if(!empty($_POST["title"]) && !empty($_POST["description"]) && !empty($_POST["date"]) && !empty($_POST["availability"]) && !empty($_POST["category"])){
-                $workshop = new Workshop();
 
-                $workshop->setTitle_workshops(htmlspecialchars($_POST["title"]));
-                $workshop->setDescription_workshops(htmlspecialchars($_POST["description"]));
-                $workshop->setDate_workshops($_POST["date"]);
-                $workshop->setAvailability_workshops((int)$_POST["availability"]);
-                $workshop->setId_categories((int)$_POST["category"]);
+        if (isset($_POST) && !empty($_POST)) {
+
+            $title = trim(htmlspecialchars($_POST["title"]));
+            $rawDescription = trim($_POST["description"]);
+            $date = $_POST["date"];
+            $availability = (int)$_POST["availability"];
+            $category = isset($_POST["category"]) ? (int)$_POST["category"] : null;
+
+            if (empty($title) || empty($rawDescription) || empty($date)) {
+                $_SESSION["error"] = "Veuillez remplir tous les champs.";
+            }
+            elseif (mb_strlen($title) < 4) {
+                $_SESSION["error"] = "Le titre doit contenir minimum 4 caractères.";
+            }
+            elseif (mb_strlen($title) > 100) {
+                $_SESSION["error"] = "Le titre ne doit pas contenir plus de 100 caractères.";
+            }
+            elseif ($availability < 1) {
+                $_SESSION["error"] = "Le nombre de places doit être positif.";
+            }
+            elseif ($availability > 30) {
+                $_SESSION["error"] = "Le nombre de places ne peut pas être supérieur à 30.";
+            }
+            elseif (empty($category)) {
+                $_SESSION["error"] = "Une catégorie doit etre associée.";
+            }
+            elseif (mb_strlen($rawDescription) > 500) {
+                $_SESSION["error"] = "La description doit faire moins de 500 caractères.";
+            }
+            elseif (strtotime($date) < time()) {
+                $_SESSION["error"] = "La date de l'atelier ne peut pas être dans le passé.";
+            }
+            else {
+                $description = trim(htmlspecialchars($_POST["description"]));
+                $workshop = new Workshop();
+                $workshop->setTitle_workshops($title);
+                $workshop->setDescription_workshops($description);
+                $workshop->setDate_workshops($date);
+                $workshop->setAvailability_workshops($availability);
+                $workshop->setId_categories($category);
 
                 $workshopModel = new WorkshopModel();
                 $workshopModel->create($workshop);
 
+                $_SESSION["success"] = "Atelier ajouté avec succès !";
                 header("Location: index.php?controller=workshop&action=workshopList");
                 exit;
             }
         }
-
         $categoryModel = new CategoryModel();
         $categories = $categoryModel->findAll();
-
-        $this->render("workshop/add", ["categories" => $categories]);
+        $this->render("workshop/add", ["categories" => $categories]); 
     }
 
     // Modification d'un atelier
@@ -114,18 +144,49 @@ class WorkshopController extends Controller
         $workshopModel = new WorkshopModel();
 
         if (isset($_POST) && !empty($_POST)) {
-            if(!empty($_POST["title"]) && !empty($_POST["description"]) && !empty($_POST["date"]) && !empty($_POST["availability"]) && !empty($_POST["category"])){
 
+            $title = trim(htmlspecialchars($_POST["title"]));
+            $rawDescription = trim($_POST["description"]);
+            $date = $_POST["date"];
+            $availability = (int)$_POST["availability"];
+            $category = isset($_POST["category"]) ? (int)$_POST["category"] : null;
+
+            if (empty($title) || empty($rawDescription) || empty($date)) {
+                $_SESSION["error"] = "Veuillez remplir tous les champs.";
+            }
+            elseif (mb_strlen($title) < 4) {
+                $_SESSION["error"] = "Le titre doit contenir minimum 4 caractères.";
+            }
+            elseif (mb_strlen($title) > 100) {
+                $_SESSION["error"] = "Le titre ne doit pas contenir plus de 100 caractères.";
+            }
+            elseif ($availability < 0) {
+                $_SESSION["error"] = "Le nombre de places ne peut pas être négatif.";
+            }
+            elseif ($availability > 30) {
+                $_SESSION["error"] = "Le nombre de places ne peut pas être supérieur à 30.";
+            }
+            elseif (empty($category)) {
+                $_SESSION["error"] = "Une catégorie doit etre associée.";
+            }
+            elseif (mb_strlen($rawDescription) > 500) {
+                $_SESSION["error"] = "La description doit faire moins de 500 caractères.";
+            }
+            elseif (strtotime($date) < time()) {
+                $_SESSION["error"] = "La date de l'atelier ne peut pas être dans le passé.";
+            }
+            else {
+                $description = trim(htmlspecialchars($rawDescription));
                 $workshop = new Workshop();
-
-                $workshop->setTitle_workshops(htmlspecialchars($_POST["title"]));
-                $workshop->setDescription_workshops(htmlspecialchars($_POST["description"]));
-                $workshop->setDate_workshops($_POST["date"]);
-                $workshop->setAvailability_workshops((int)$_POST["availability"]);
-                $workshop->setId_categories((int)$_POST["category"]);
+                $workshop->setTitle_workshops($title);
+                $workshop->setDescription_workshops($description);
+                $workshop->setDate_workshops($date);
+                $workshop->setAvailability_workshops($availability);
+                $workshop->setId_categories($category);
 
                 $workshopModel->update($id, $workshop);
 
+                $_SESSION["success"] = "Atelier modifiée avec succès !";
                 header("Location: index.php?controller=workshop&action=workshopList");
                 exit;
             }
@@ -148,8 +209,20 @@ class WorkshopController extends Controller
         $this->isAdmin();
 
         if (isset($_GET["id"]) && !empty($_GET["id"])) {
+            $id = (int)$_GET["id"];
             $workshopModel = new WorkshopModel();
-            $workshopModel->delete((int)$_GET["id"]);
+
+            if ($workshopModel->hasReservations($id)) {
+                
+                $_SESSION["error"] = "Impossible de supprimer cet atelier car des utilisateurs y sont inscrits.";
+                
+            } else {
+                $workshopModel->delete($id);
+                $_SESSION["success"] = "L'atelier a été supprimé avec succès.";
+            }
+
+        } else {
+            $_SESSION["error"] = "Identifiant d'atelier invalide.";
         }
         
         header("Location: index.php?controller=workshop&action=workshopList");

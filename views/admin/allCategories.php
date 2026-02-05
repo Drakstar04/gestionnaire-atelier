@@ -11,22 +11,6 @@
     </div>
 </div>
 
-<?php if(isset($_SESSION["error"])){ ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-triangle-exclamation me-2"></i> <?= $_SESSION["error"] ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <?php unset($_SESSION["error"]); ?>
-<?php } ?>
-
-<?php if(isset($_SESSION["success"])){ ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-check me-2"></i> <?= $_SESSION["success"] ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <?php unset($_SESSION["success"]); ?>
-<?php } ?>
-
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <table class="table table-hover align-middle mb-0">

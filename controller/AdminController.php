@@ -36,13 +36,24 @@ class AdminController extends Controller
         $this->isAdmin();
 
         if (isset($_POST) && !empty($_POST)) {
-            if (!empty($_POST["name"])) {
+            
+            $name = htmlspecialchars($_POST["name"]);
+
+            if (empty($name)) {
+                $_SESSION["error"] = "Veuillez remplir tous les champs.";
+            }
+            elseif (mb_strlen($name) < 4) {
+                $_SESSION["error"] = "Le nom doit contenir au moins 4 caractères.";
+            }elseif (mb_strlen($name) > 35) {
+                $_SESSION["error"] = "Le nom doit contenir moins de 35 caractères.";
+            }else {
                 $category = new Category();
-                $category->setName_categories(htmlspecialchars($_POST["name"]));
+                $category->setName_categories($name);
 
                 $categoryModel = new CategoryModel();
                 $categoryModel->create($category);
 
+                $_SESSION["success"] = "Catégorie ajouté avec succès !";
                 header("Location: index.php?controller=admin&action=allCategories");
                 exit;
             }
@@ -64,16 +75,27 @@ class AdminController extends Controller
         $categoryModel = new CategoryModel();
 
         if (isset($_POST) && !empty($_POST)) {
-            if (!empty($_POST["name"])) {
+            
+            $name = htmlspecialchars($_POST["name"]);
+
+            if (empty($name)) {
+                $_SESSION["error"] = "Veuillez remplir tous les champs.";
+            }
+            elseif (mb_strlen($name) < 4) {
+                $_SESSION["error"] = "Le nom doit contenir au moins 4 caractères.";
+            }elseif (mb_strlen($name) > 35) {
+                $_SESSION["error"] = "Le nom doit contenir moins de 35 caractères.";
+            }else {
                 $category = new Category();
-                $category->setName_categories(htmlspecialchars($_POST["name"]));
+                $category->setName_categories($name);
 
                 $categoryModel->update($id, $category);
+
+                $_SESSION["success"] = "Catégorie modifié avec succès !";
                 header("Location: index.php?controller=admin&action=allCategories");
                 exit;
             }
         }
-
         $category = $categoryModel->find($id);
         $this->render("admin/editCategory", ["category" => $category]);
     }
@@ -88,11 +110,13 @@ class AdminController extends Controller
             $categoryModel = new CategoryModel();
 
             if ($categoryModel->isLinkedToWorkshop($id)) {
-                $_SESSION["error"] = "Impossible de supprimer cette catégorie car elle est liée à des ateliers existants.";
+                $_SESSION["error"] = "Impossible de supprimer : cette catégorie contient des ateliers.";
             } else {
                 $categoryModel->delete($id);
-                $_SESSION["success"] = "Catégorie supprimée avec succès.";
+                $_SESSION["success"] = "La catégorie a bien été supprimée.";
             }
+        } else {
+            $_SESSION["error"] = "ID de catégorie invalide.";
         }
 
         header("Location: index.php?controller=admin&action=allCategories");

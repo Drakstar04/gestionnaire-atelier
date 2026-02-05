@@ -141,6 +141,17 @@ class WorkshopModel extends DbConnect {
         $this->request->execute();
         return $this->request->fetchAll();
     }
+
+    // Vérifie si un atelier possède des réservations
+    public function hasReservations(int $id)
+    {
+        $this->request = $this->connection->prepare("SELECT COUNT(*) as count FROM reservations WHERE id_workshops = :id");
+        $this->request->bindValue(":id", $id);
+        $this->request->execute();
+        $result = $this->request->fetch();
+        
+        return $result->count > 0;
+    }
     
     private function executeTryCatch()
     {

@@ -8,7 +8,7 @@
             </div>
             <div class="card-body p-4">
                 
-                <form action="index.php?controller=workshop&action=edit&id=<?= $workshop->id_workshops ?>" method="POST">
+                <form action="index.php?controller=workshop&action=edit&id=<?= $workshop->id_workshops ?>" method="POST" id="form-workshop" novalidate data-mode="edit">
                     
                     <div class="mb-3">
                         <label for="title" class="form-label">Titre de l'atelier</label>

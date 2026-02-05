@@ -42,7 +42,6 @@ class ReservationController extends Controller
         $this->isLogged();
         $workshopModel = new WorkshopModel();
         $reservationModel = new ReservationModel();
-        $error = null;
 
         if (isset($_POST) && !empty($_POST)) {
             if (isset($_POST["workshop_id"]) && !empty($_POST["workshop_id"])) {
@@ -51,7 +50,7 @@ class ReservationController extends Controller
                 $userId = $_SESSION["user"]["id_user"];
 
                 if ($reservationModel->checkDuplicate($userId, $workshopId)) {
-                    $error = "Vous êtes déjà inscrit à cet atelier.";
+                    $_SESSION["error"] = "Vous êtes déjà inscrit à cet atelier.";
                 } else {
                     $workshop = $workshopModel->find($workshopId);
 
@@ -63,10 +62,12 @@ class ReservationController extends Controller
                         $reservationModel->create($reservation);
                         $workshopModel->updateAvailability($workshopId, "decrement");
 
+                        $_SESSION["success"] = "Votre réservation a été confirmée avec succès !";
+
                         header("Location: index.php?controller=reservation&action=reservationList");
                         exit;
                     } else {
-                        $error = "Désolé, cet atelier n'a plus de places disponibles.";
+                        $_SESSION["error"] = "Désolé, cet atelier n'a plus de places disponibles.";
                     }
                 }
             }
@@ -78,8 +79,7 @@ class ReservationController extends Controller
 
         $this->render("reservation/reservationCreate", [
             "workshops" => $workshops,
-            "selectedId" => $selectedWorkshopId,
-            "error" => $error
+            "selectedId" => $selectedWorkshopId
         ]);
     }
 
@@ -100,7 +100,13 @@ class ReservationController extends Controller
 
                 $workshopModel = new WorkshopModel();
                 $workshopModel->updateAvailability($reservationData->id_workshops, "increment");
+
+                $_SESSION["success"] = "La réservation a bien été annulée.";
+            } else {
+                $_SESSION["error"] = "Impossible d'annuler cette réservation.";
             }
+        } else {
+            $_SESSION["error"] = "Identifiant de réservation invalide.";
         }
 
         header("Location: index.php?controller=reservation&action=reservationList");

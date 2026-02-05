@@ -7,10 +7,6 @@
                 <h4 class="mb-0"><i class="fa-solid fa-ticket me-2"></i> Réserver une place</h4>
             </div>
             <div class="card-body p-4">
-                
-                <?php if(isset($error)){ ?>
-                    <div class="alert alert-danger"><?= $error ?></div>
-                <?php } ?>
 
                 <form action="index.php?controller=reservation&action=reservationCreate" method="POST">
                     

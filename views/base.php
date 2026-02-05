@@ -8,6 +8,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="assets/style.css" rel="stylesheet">
+    <script defer src="../public/validation.js"></script>
 </head>
 <body>
 
@@ -64,6 +65,23 @@
     </header>
 
     <main class="container py-4 mb-5">
+
+        <?php if(isset($_SESSION["error"])){ ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i> <?= $_SESSION["error"] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION["error"]); ?>
+        <?php } ?>
+
+        <?php if(isset($_SESSION["success"])){ ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-check me-2"></i> <?= $_SESSION["success"] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION["success"]); ?>
+        <?php } ?>
+
         <?= $content ?>
     </main>
 

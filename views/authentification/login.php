@@ -8,7 +8,7 @@
             </div>
             <div class="card-body p-4">
 
-                <form action="index.php?controller=auth&action=login" method="POST">
+                <form action="index.php?controller=auth&action=login" method="POST" id="form-login" novalidate>
                     
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>

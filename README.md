@@ -72,11 +72,11 @@ Voici des comptes pré-créés pour tester les différents rôles :
 
 ### Compte Administrateur (Accès complet)
 * **Email :** `admin@test.com`
-* **Mot de passe :** `1234`
+* **Mot de passe :** `12345678`
 
 ### Compte Utilisateur (Réservation uniquement)
 * **Email :** `user@test.com`
-* **Mot de passe :** `1234`
+* **Mot de passe :** `12345678`
 
 ---
 
